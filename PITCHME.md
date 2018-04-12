@@ -227,11 +227,12 @@ defmodule Parser do
 end
 
 Parser.encode!(JSON, term)
+#              ^ - динамично
 ```
 
 ---
 
-Вече можем в run-time да избираме какъв формат ни трябва!
+Вече можем runtime да избираме какъв формат ни трябва!
 
 ---
 
@@ -256,5 +257,11 @@ Parser.encode!(JSON, term)
 ---
 
 Един вид - протоколите са поведения + логика за dynamic dispatch
+
+---
+
+Въпроси и обратна връзка: feedback@armenskiq.pop
+
+---
 
 ---?image=assets/beers.jpg&size=auto 90%
