@@ -19,11 +19,12 @@
 
 ## Съдържание
 
-1. Нотация за типова спецификация(type specification)
+1. Типова спецификация(type specification)
   * Видове
   * Синтаксис
   * Дефиниране на собствени
 2. Поведения(Behaviours)
+  * dynamic dispatch
 
 ---
 
@@ -45,17 +46,32 @@
 
 #### ...пишат ли на Хаскел?
 
----
-
-#### единствения отговор, който получих:
-
----?image=assets/answer.png
-
 ---?image=assets/troll.jpg&size=auto 90%
 
 ---
 
-### Типови спецификации(type specification(typespecs(типспец?)))
+#### единствения отговор, който получих:
+
+---?image=assets/answer.png&size=auto 50%
+
+---
+
+### Типови спецификации
+
+---
+
+### Type specification
+
+---
+
+### Typespecs
+
+---
+
+### Типспец?
+
+---
+
 "Звучи доста спечено"
 
 ---?image=assets/troll.jpg&size=auto 90%
@@ -87,21 +103,9 @@ Elixir идва с нотация за типове.
 
 Функциите са така:
 ```elixir
-defmodule TestSuite do
-  @typep tests :: [%__MODULE__.Test{}]
-  @typep ran :: boolean()
-
-  @type t :: %TestSuite{
-          tests: [],
-          ran: false
-        }
-  @type t(tests, ran) :: %TestSuite{
-          tests: tests,
-          ran: ran
-        }
-
-  @spec new() :: t()
-  def new(), do: %TestSuite{}
+defmodule Foo do
+  @spec is_even(integer) :: true | false
+  def is_even(x), do: # ... не знам как
 end
 ```
 
@@ -120,21 +124,21 @@ end
 
 ---
 
-Като цяло са същите като в Erlang с още малко отгоре!
+##### Като цяло са същите като в Erlang с още малко отгоре!
 
 ---
 
-[Straight outta docs](https://hexdocs.pm/elixir/typespecs.html)
+##### [Straight outta docs](https://hexdocs.pm/elixir/typespecs.html)  
 PS1: Гледаме документацията тук
 
 ---
 
-#### Използване
+#### Използване  
 
-PS1: Live coding starts here
-PS2: Time for behaviours
+PS1: Live coding starts here  
+PS2: Time for behaviours  
 
----?image=assets/dialyzer.png&size=auto 90%
+---?image=assets/dialyzer.png&size=auto 70%
 
 ---
 
@@ -146,8 +150,6 @@ PS2: Time for behaviours
 
 ##### Начин да разделим абстракцията от имплементацията.
 
----
-
 ---?image=assets/what.gif&size=auto 70%
 
 ---
@@ -158,7 +160,7 @@ PS2: Time for behaviours
 
 ---
 
-Може да мислите за тях като интерфейсите в *!нормалните* езици.
+Ако се налага -  мислите за тях като интерфейсите в **!нормалните** езици.
 
 ---
 
@@ -166,7 +168,10 @@ PS2: Time for behaviours
 
 ---
 
-Да кажем, че бихме искали да напишем поведение за парсване на JSON/MsgPack(пам пам пам).
+Да кажем, че бихме искали да напишем поведение за парсване на JSON/MsgPack(случайност).
+
+---
+
 Как би изглеждало това?
 
 ---
@@ -183,14 +188,14 @@ end
 И след това го вмъкваме в нашите имплементации по този начин:
 
 ```
-defmodule JSONParser do
+defmodule JSON do
   @behaviour Parser
 
   def encode(term), do: # ... encode
   def decode(str), do: # ... decode
 end
 
-defmodule MsgPackParser do
+defmodule MsgPack do
   @behaviour Parser
 
   def encode(term), do: # ... encode
@@ -200,3 +205,56 @@ end
 
 ---
 
+### Dynamic dispatch
+
+---
+
+Можем динамично да решаваме кога да извикаме даден модул.
+
+---
+
+Нищо не ни пречи да направим следното:
+
+---
+
+```elixir
+defmodule Parser do
+  # ... rest of code ...
+
+  def encode!(implementation, term) do
+    implementation.encode(term)
+  end
+end
+
+Parser.encode!(JSON, term)
+```
+
+---
+
+Вече можем в run-time да избираме какъв формат ни трябва!
+
+---
+
+... чакай малко ...
+
+---
+
+### Behaviours vs Protocols
+
+---?image=assets/fight.jpg&size=auto 90%
+
+---
+
+Двете не правят ли близки неща?
+
+---
+
+Разликите:
+  * протоколите ни дават полиморфизъм над типове/дата
+  * поведенията ни дават динамично да се включваме където ни трябва
+
+---
+
+Един вид - протоколите са поведения + логика за dynamic dispatch
+
+---?image=assets/beers.jpg&size=auto 90%
